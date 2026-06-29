@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laragh Gallagher — Executive Creative Director</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0907;
+      --cream: #ede5d8;
+      --red: #FF2200;
+      --gold: #c8a96e;
+      --grey: #555;
+      --dim: #131210;
+      --max: 1300px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      cursor: none;
+      overflow-x: hidden;
+    }
+
+    /* ── PRELOADER ── */
+    #preloader {
+      position: fixed; inset: 0;
+      z-index: 10000;
+      background: var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 1.1s cubic-bezier(0.76, 0, 0.24, 1);
+    }
+
+    #preloader.done { transform: translateY(-100%); }
+
+    .pre-ring-wrap {
+      position: relative;
+      width: 160px;
+      height: 160px;
+    }
+
+    .pre-ring-svg {
+      width: 160px;
+      height: 160px;
+      animation: pre-spin 1.8s linear infinite;
+      transform-origin: center;
+    }
+
+    @keyframes pre-spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .pre-ring-initials {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      letter-spacing: 0.18em;
+      color: var(--cream);
+    }
+
+    /* ── CURSOR ── */
+    #cursor {
+      position: fixed;
+      width: 8px; height: 8px;
+      background: #FF2200;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.25s, height 0.25s;
+    }
+
+    #cursor-ring {
+      position: fixed;
+      width: 32px; height: 32px;
+      border: 1px solid rgba(237,229,216,0.3);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, border-color 0.3s;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.4rem 2.5rem;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.4s, background 0.4s, backdrop-filter 0.4s;
+    }
+
+    nav.scrolled {
+      border-color: rgba(237,229,216,0.06);
+      background: rgba(10,9,7,0.88);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav-left { display: flex; align-items: center; gap: 2.5rem; }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.1em;
+      color: var(--cream);
+      text-decoration: none;
+    }
+
+    .nav-clock {
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(237,229,216,0.7);
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .nav-clock-sep { color: rgba(237,229,216,0.15); }
+
+    .nav-right { display: flex; align-items: center; gap: 2.2rem; }
+
+    .nav-contact {
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(237,229,216,0.65);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+
+    .nav-contact:hover { color: var(--cream); }
+
+    .nav-menu-wrap { position: relative; }
+
+    .nav-menu {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.18em;
+      color: var(--cream);
+      background: none;
+      border: none;
+      cursor: none;
+      transition: color 0.2s;
+    }
+
+    .nav-menu:hover { color: rgba(237,229,216,0.6); }
+
+    .nav-dropdown {
+      position: absolute;
+      top: calc(100% + 0.8rem);
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.2rem;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.45s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.3s ease;
+    }
+
+    .nav-menu-wrap:hover .nav-dropdown,
+    .nav-dropdown.open {
+      max-height: 200px;
+      opacity: 1;
+    }
+
+    .nav-drop-link {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.18em;
+      color: rgba(237,229,216,0.35);
+      text-decoration: none;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+
+    .nav-drop-link:hover { color: var(--cream); }
+
+    /* ── DROPDOWN MENU ── */
+    #site-menu {
+      position: fixed;
+      top: 3rem;
+      right: 1.8rem;
+      z-index: 4000;
+      background: var(--bg);
+      padding: 1.5rem 0 1.5rem 3rem;
+      transform: translateY(-10px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.3s ease;
+    }
+
+    #site-menu.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .menu-links {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.1rem;
+    }
+
+    .menu-link {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      letter-spacing: 0.08em;
+      color: rgba(237,229,216,0.25);
+      text-decoration: none;
+      line-height: 1;
+      overflow: hidden;
+      display: block;
+      height: 1em;
+    }
+
+    .menu-link-inner {
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .menu-link:hover .menu-link-inner { transform: translateY(-50%); }
+
+    .menu-link-inner span {
+      display: block;
+      height: 1em;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+
+    .menu-link:hover .menu-link-inner span { color: var(--cream); }
+
+    .menu-close {
+      display: block;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: rgba(237,229,216,0.2);
+      background: none;
+      border: none;
+      cursor: none;
+      transition: color 0.2s;
+      margin-bottom: 1.2rem;
+      text-align: right;
+    }
+
+    .menu-close:hover { color: var(--cream); }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background-image: url('images/WHD_Hero.jpg');
+      background-size: cover;
+      background-position: center 30%;
+      pointer-events: none;
+    }
+
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(to right, #0a0907 0%, rgba(10,9,7,0.6) 30%, transparent 50%),
+        linear-gradient(to bottom, rgba(10,9,7,0.2) 0%, rgba(10,9,7,0.3) 50%, rgba(10,9,7,0.95) 85%, #0a0907 100%),
+        radial-gradient(ellipse at 68% 38%, rgba(90,40,15,0.4) 0%, transparent 60%);
+    }
+
+    .hero-info {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 0.45fr 1fr;
+      align-items: start;
+      padding: 0 2.5rem 1.4rem;
+      border-bottom: none;
+      gap: 2rem;
+    }
+
+    .hero-coord {
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      color: var(--grey);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(0.85rem, 1.3vw, 1.15rem);
+      letter-spacing: 0.06em;
+      color: var(--cream);
+      line-height: 1.25;
+    }
+
+    .hero-desc {
+      font-size: 0.7rem;
+      line-height: 1.65;
+      color: rgba(237,229,216,0.65);
+      letter-spacing: 0.01em;
+    }
+
+    .hero-copy {
+      text-align: right;
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      color: rgba(237,229,216,0.25);
+      text-transform: uppercase;
+    }
+
+    .hero-type {
+      position: relative;
+      padding: 0 1.8rem;
+      line-height: 0.86;
+      overflow: hidden;
+    }
+
+    .hero-line {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 7vw, 10rem);
+      color: var(--cream);
+      display: block;
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+      transform: translateY(108%);
+      transition: transform 1s cubic-bezier(0.76, 0, 0.24, 1);
+    }
+
+    .hero-line.revealed { transform: translateY(0); }
+    .hero-line-2 { transition-delay: 0.08s; }
+
+    /* Floating CTA */
+    .hero-cta-float {
+      position: fixed;
+      right: 2rem;
+      bottom: 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      background: rgba(237,229,216,0.07);
+      border: 1px solid rgba(237,229,216,0.14);
+      border-radius: 100px;
+      padding: 0.65rem 1.3rem 0.65rem 0.65rem;
+      cursor: none;
+      text-decoration: none;
+      backdrop-filter: blur(10px);
+      transition: background 0.3s, border-color 0.3s, opacity 0.4s, transform 0.4s;
+      z-index: 200;
+      opacity: 0;
+      transform: translateX(16px);
+      pointer-events: none;
+    }
+
+    .hero-cta-float.cta-visible {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .hero-cta-float:hover {
+      background: rgba(237,229,216,0.13);
+      border-color: rgba(200,169,110,0.4);
+    }
+
+    .cta-icon {
+      width: 28px; height: 28px;
+      background: var(--cream);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--bg);
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .cta-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--cream);
+    }
+
+    /* ── MARQUEE ── */
+    .marquee-wrap {
+      border-top: 1px solid rgba(237,229,216,0.05);
+      border-bottom: 1px solid rgba(237,229,216,0.05);
+      overflow: hidden;
+      padding: 1rem 0;
+      background: var(--dim);
+    }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 32s linear infinite;
+    }
+
+    .marquee-item {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      color: rgba(237,229,216,0.35);
+      padding: 0 1.8rem;
+      white-space: nowrap;
+    }
+
+    .msep { color: var(--gold); margin: 0 0.2rem; }
+
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── LAYOUT ── */
+    .section-wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 3rem 2.5rem 6rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 6rem 1.8rem 1.5rem;
+    }
+
+    .section-coord {
+      font-size: 0.58rem;
+      letter-spacing: 0.24em;
+      color: var(--grey);
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.8rem, 6.5vw, 7rem);
+      letter-spacing: 0.02em;
+      line-height: 0.88;
+      color: var(--cream);
+    }
+
+    .section-meta {
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--grey);
+      text-align: right;
+      line-height: 2;
+    }
+
+    /* ── WORK ── */
+    #work { border-top: 1px solid rgba(237,229,216,0.2); }
+    #more { border-top: 1px solid rgba(237,229,216,0.06); }
+
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(237,229,216,0.05);
+      border: 1px solid rgba(237,229,216,0.05);
+    }
+
+    .work-card {
+      background: var(--bg);
+      position: relative;
+      cursor: none;
+      transition: background 0.3s;
+    }
+
+    .work-card:hover { background: #111009; }
+
+    .work-card.wide { grid-column: span 3; }
+
+    .work-thumb {
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, #151311 0%, #0c0b09 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .work-card.wide .work-thumb { aspect-ratio: 16/6; }
+
+    .work-thumb::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 35% 55%, rgba(139,21,0,0.1) 0%, transparent 65%);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .work-card:hover .work-thumb::after { opacity: 1; }
+
+    .work-placeholder {
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(237,229,216,0.12);
+    }
+
+    .work-card-body {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.4rem 1.3rem;
+      border-top: 1px solid rgba(237,229,216,0.05);
+    }
+
+    .wc-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      color: rgba(237,229,216,0.18);
+      flex-shrink: 0;
+    }
+
+    .wc-info { flex: 1; }
+
+    .wc-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.05em;
+      color: var(--cream);
+      line-height: 1;
+    }
+
+    .wc-cat {
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.55;
+      margin-top: 0.25rem;
+    }
+
+    .wc-arrow {
+      width: 30px; height: 30px;
+      border: 1px solid rgba(237,229,216,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: rgba(237,229,216,0.35);
+      flex-shrink: 0;
+      transition: border-color 0.25s, color 0.25s, transform 0.3s;
+    }
+
+    .work-card:hover .wc-arrow {
+      background: #FF2200;
+      border-color: #FF2200;
+      color: var(--cream);
+      transform: rotate(45deg);
+    }
+
+    /* ── ABOUT ── */
+    #about { border-top: 1px solid rgba(237,229,216,0.06); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .about-bio {
+      font-size: 0.98rem;
+      color: rgba(237,229,216,0.65);
+      line-height: 1.85;
+      margin-bottom: 1.3rem;
+    }
+
+    .about-bio strong { color: var(--cream); font-weight: 400; }
+
+    /* ── ABOUT FLIP CARD ── */
+    .about-flip-card {
+      perspective: 1200px;
+    }
+
+    .about-flip-inner {
+      position: relative;
+      width: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.75s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .about-flip-card:hover .about-flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    .about-flip-front,
+    .about-flip-back {
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    .about-flip-back {
+      position: absolute;
+      top: 0; left: 0; width: 100%;
+      transform: rotateY(180deg);
+    }
+
+    .about-flip-back-line {
+      display: block;
+      font-size: 1.6rem;
+      line-height: 1.5;
+      color: rgba(237,229,216,0.65);
+      margin-bottom: 1.5rem;
+    }
+
+    .quotes-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.8rem;
+      margin-top: 2.5rem;
+    }
+
+    .quote-item {
+      display: flex;
+      gap: 1.2rem;
+      align-items: flex-start;
+    }
+
+    .quote-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid rgba(237,229,216,0.12);
+      background: #2a2826;
+    }
+
+    .quote-body {
+      border-left: 1px solid var(--red);
+      padding-left: 1.2rem;
+    }
+
+    .quote-text {
+      font-size: 0.88rem;
+      color: rgba(237,229,216,0.6);
+      line-height: 1.7;
+      font-style: italic;
+      margin-bottom: 0.5rem;
+    }
+
+    .quote-cite {
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--grey);
+      font-style: normal;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(237,229,216,0.05);
+      border: 1px solid rgba(237,229,216,0.05);
+      margin-top: 3rem;
+    }
+
+    .stat-cell { background: var(--bg); padding: 1.5rem 1.2rem; }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      line-height: 1;
+      color: var(--cream);
+    }
+
+    .stat-num em {
+      font-style: italic;
+      color: var(--gold);
+      font-family: Georgia, serif;
+      font-size: 2.2rem;
+    }
+
+    .stat-label {
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-top: 0.4rem;
+    }
+
+    .awards-title {
+      font-size: 0.58rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-bottom: 1.4rem;
+    }
+
+    .award-list { list-style: none; }
+
+    .award-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid rgba(237,229,216,0.05);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: 0.06em;
+      color: rgba(237,229,216,0.5);
+      transition: color 0.25s, padding-left 0.3s;
+    }
+
+    .award-item:hover { color: var(--cream); padding-left: 0.6rem; }
+
+    .award-item::after {
+      content: '✦';
+      font-size: 0.48rem;
+      color: var(--gold);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .award-item:hover::after { opacity: 1; }
+
+    .skills-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 2.5rem;
+    }
+
+    .skill-tag {
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid rgba(200,169,110,0.18);
+      color: rgba(200,169,110,0.6);
+      border-radius: 100px;
+    }
+
+    /* ── CONTACT ── */
+    #contact { border-top: 1px solid rgba(237,229,216,0.06); }
+
+    .contact-big {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 11vw, 14rem);
+      letter-spacing: 0.01em;
+      line-height: 0.88;
+      margin-bottom: 4rem;
+      overflow: hidden;
+    }
+
+    .contact-line {
+      display: block;
+      transform: translateY(110%);
+      transition: transform 1s cubic-bezier(0.76, 0, 0.24, 1);
+    }
+
+    .contact-line.revealed { transform: translateY(0); }
+    .contact-line-2 { color: var(--gold); transition-delay: 0.1s; }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .contact-links { display: flex; flex-direction: column; }
+
+    .contact-link-row {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.1rem 0;
+      border-bottom: 1px solid rgba(237,229,216,0.05);
+      text-decoration: none;
+      transition: padding-left 0.3s;
+    }
+
+    .contact-link-row:hover { padding-left: 0.5rem; }
+
+    .cl-label {
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.55;
+      min-width: 52px;
+    }
+
+    .cl-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: 0.18em;
+      color: var(--cream);
+    }
+
+    form { display: flex; flex-direction: column; gap: 1.3rem; }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+
+    label {
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--grey);
+    }
+
+    input, textarea {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(237,229,216,0.1);
+      padding: 0.7rem 0;
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 0.92rem;
+      color: var(--cream);
+      outline: none;
+      resize: none;
+      transition: border-color 0.25s;
+    }
+
+    input::placeholder, textarea::placeholder { color: rgba(237,229,216,0.18); }
+    input:focus, textarea:focus { border-color: var(--gold); }
+    textarea { min-height: 88px; }
+
+    button[type="submit"] {
+      align-self: flex-start;
+      margin-top: 0.5rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--cream);
+      border: none;
+      padding: 0.9rem 2.2rem;
+      cursor: none;
+      border-radius: 1px;
+      transition: background 0.25s, transform 0.2s;
+    }
+
+    button[type="submit"]:hover { background: var(--gold); transform: translateY(-2px); }
+
+    #form-status {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      display: none;
+      margin-top: 0.5rem;
+    }
+
+    /* ── PROJECT MODAL ── */
+    #video-modal {
+      position: fixed; inset: 0;
+      z-index: 5000;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      background: rgba(10,9,7,0);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease, background 0.35s ease;
+      padding: 3rem 2rem;
+      overflow-y: auto;
+    }
+
+    #video-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+      background: rgba(10,9,7,0.88);
+    }
+
+    .modal-inner {
+      position: relative;
+      width: min(92vw, 1200px);
+      background: #1c1a18;
+      transform: translateY(28px);
+      transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      margin: auto;
+      flex-shrink: 0;
+    }
+
+    #video-modal.open .modal-inner { transform: translateY(0); }
+
+    .modal-close {
+      position: absolute;
+      top: 1.2rem; right: 1.2rem;
+      width: 34px; height: 34px;
+      border: 1px solid rgba(237,229,216,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: rgba(237,229,216,0.5);
+      background: none;
+      cursor: none;
+      transition: border-color 0.2s, color 0.2s;
+      z-index: 10;
+    }
+
+    .modal-close:hover { border-color: var(--cream); color: var(--cream); }
+
+    .modal-header { padding: 2.5rem 3rem 0; }
+
+    .modal-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.2rem, 4.5vw, 4.5rem);
+      letter-spacing: 0.02em;
+      color: var(--cream);
+      line-height: 0.9;
+      padding-right: 3rem;
+    }
+
+    .modal-meta {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 1px;
+      background: rgba(237,229,216,0.06);
+      margin-top: 2rem;
+      border-top: 1px solid rgba(237,229,216,0.06);
+      border-bottom: 1px solid rgba(237,229,216,0.06);
+    }
+
+    .modal-meta-item {
+      padding: 1rem 3rem;
+      background: #1c1a18;
+    }
+
+    .modal-meta-label {
+      display: block;
+      font-size: 0.5rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-bottom: 0.4rem;
+    }
+
+    .modal-meta-value {
+      display: block;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      color: var(--cream);
+    }
+
+    .modal-desc {
+      padding: 1.5rem 3rem 2rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(237,229,216,0.4);
+      line-height: 1.8;
+      max-width: 560px;
+    }
+
+    .modal-media {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #0a0907;
+    }
+
+    .modal-media iframe {
+      width: 100%; height: 100%;
+      border: none;
+    }
+
+    .modal-gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      padding: 2rem 3rem;
+      background: #1c1a18;
+    }
+
+    .modal-gallery:empty { display: none; }
+
+    .modal-gallery-img {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      display: block;
+    }
+
+    .modal-gallery-img.full {
+      grid-column: span 2;
+      aspect-ratio: 16/9;
+    }
+
+    .modal-gallery-img.centered {
+      grid-column: span 2;
+      width: 45%;
+      margin: 0 auto;
+      object-fit: contain;
+      aspect-ratio: unset;
+      background: #1c1a18;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid rgba(237,229,216,0.06);
+      padding: 1.8rem 2.5rem;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+
+    footer p {
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--grey);
+    }
+
+    /* ── REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .reveal.reveal-left  { transform: translateX(-50px); }
+    .reveal.reveal-left.visible  { transform: translateX(0); }
+    .reveal.reveal-right { transform: translateX(50px); }
+    .reveal.reveal-right.visible { transform: translateX(0); }
+
+    .d1 { transition-delay: 0.1s; }
+    .d2 { transition-delay: 0.2s; }
+    .d3 { transition-delay: 0.3s; }
+    .d4 { transition-delay: 0.4s; }
+    .d5 { transition-delay: 0.5s; }
+
+    /* ── SPOTLIGHT REVEAL ── */
+    .hero-text-base { position: relative; }
+
+    .hero-spotlight-glow {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .hero-text-secret {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      pointer-events: none;
+      clip-path: circle(0px at 50% 50%);
+    }
+
+    .hero-secret-line {
+      color: #FFC100 !important;
+      transform: translateY(0) !important;
+      transition: none !important;
+    }
+
+    /* ── RESPONSIVE ── */
+
+    /* Touch devices: restore default cursor, hide custom cursor */
+    @media (hover: none) {
+      body { cursor: auto; }
+      #cursor, #cursor-ring { display: none; }
+      .nav-menu, .work-card, .modal-close,
+      .hero-cta-float, button, a { cursor: pointer; }
+
+      /* Flip card: disable on touch — show front only, hide back */
+      .about-flip-inner { transform: none !important; transform-style: flat; }
+      .about-flip-back { display: none; }
+      .about-flip-front {
+        -webkit-backface-visibility: visible;
+        backface-visibility: visible;
+      }
+    }
+
+    /* Tablet */
+    @media (max-width: 860px) {
+      nav { padding: 1.2rem 1.4rem; }
+      .nav-clock { display: none; }
+
+      .hero-info {
+        grid-template-columns: 1fr 1fr;
+        padding: 0 1.4rem 1.4rem;
+      }
+      .hero-copy { display: none; }
+
+      .section-wrap { padding: 3rem 1.4rem 5rem; }
+      .section-header { padding: 4rem 1.4rem 1.2rem; }
+
+      /* Work grid: 2 col on tablet */
+      .work-grid { grid-template-columns: repeat(2, 1fr); }
+      .work-card.wide { grid-column: span 2; }
+      .work-card.wide .work-thumb { aspect-ratio: 16/9; }
+
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+
+      footer { flex-direction: column; gap: 0.5rem; text-align: left; }
+
+      /* Modal */
+      #video-modal { padding: 1.2rem; }
+      .modal-header { padding: 1.8rem 1.5rem 0; }
+      .modal-title { font-size: clamp(1.8rem, 5vw, 3rem); padding-right: 2.5rem; }
+      .modal-meta { grid-template-columns: 1fr; }
+      .modal-meta-item { padding: 0.75rem 1.5rem; }
+      .modal-desc { padding: 1.2rem 1.5rem 1.5rem; }
+      .modal-gallery { padding: 1.5rem; gap: 1rem; }
+      .modal-gallery-img.centered { width: 70%; }
+    }
+
+    .mob-break { display: none; }
+
+    /* Mobile */
+    @media (max-width: 500px) {
+      .hero-info { grid-template-columns: 1fr; gap: 1.5rem; }
+      .hero-type { padding: 0 1rem; }
+
+      .mob-break { display: block; }
+
+      /* Hero image: swap to portrait crop on mobile */
+      .hero-bg { background-image: url('images/WHD_Mobil_Hero.jpg'); background-position: center center; }
+
+      /* Work card mobile image swaps */
+      .thumb-wednesday { background-image: url('images/Wednesday_mobil_hero.jpg') !important; }
+      .thumb-jameson   { background-image: url('images/Jameson_Mobil_Hero.jpg') !important; }
+      .thumb-scarethru { background-image: url('images/ScareThru_Mobil_Hero.png') !important; }
+
+      /* Allow hero text to wrap and scale down on small screens */
+      .hero-line {
+        white-space: normal;
+        font-size: clamp(2.8rem, 13vw, 5rem);
+        line-height: 0.92;
+      }
+
+      .work-grid { grid-template-columns: 1fr; }
+      .work-card.wide { grid-column: span 1; }
+      .work-card.wide .work-thumb { aspect-ratio: 16/9; }
+
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+
+      .contact-big { font-size: clamp(3rem, 14vw, 8rem); }
+      .hero-cta-float { right: 1rem; bottom: 1.5rem; }
+      .cl-value { font-size: 0.85rem; letter-spacing: 0.14em; }
+
+      /* Modal: single column gallery on small screens */
+      .modal-gallery { grid-template-columns: 1fr; }
+      .modal-gallery-img.full { grid-column: span 1; aspect-ratio: 4/3; }
+      .modal-gallery-img.centered { grid-column: span 1; width: 85%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PRELOADER -->
+  <div id="preloader">
+    <div class="pre-ring-wrap">
+      <svg class="pre-ring-svg" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="80" cy="80" r="70" stroke="rgba(237,229,216,0.07)" stroke-width="1"/>
+        <circle cx="80" cy="80" r="70" stroke="#ede5d8" stroke-width="1.5" stroke-dasharray="330 110" stroke-linecap="round"/>
+      </svg>
+      <div class="pre-ring-initials">LG</div>
+    </div>
+  </div>
+
+  <!-- CURSOR -->
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <div class="nav-left">
+      <a href="#hero" class="nav-logo">LG</a>
+      <div class="nav-clock">
+        <span>FRISCO</span>
+        <span class="nav-clock-sep">/</span>
+        <span>817.991.5975</span>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="nav-menu-wrap">
+        <button class="nav-menu" id="menuBtn">Menu</button>
+        <div class="nav-dropdown" id="navDropdown">
+          <a href="#work" class="nav-drop-link" data-menu-link>Selected Work</a>
+          <a href="#more" class="nav-drop-link" data-menu-link>The More</a>
+          <a href="#about" class="nav-drop-link" data-menu-link>Me</a>
+          <a href="#contact" class="nav-drop-link" data-menu-link>Contact</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+
+    <div class="hero-info">
+      <div>
+        <p class="hero-coord">[title]</p>
+        <p class="hero-label">Creative Director Of<br>Experiential Design & More</p>
+      </div>
+      <div>
+        <p class="hero-coord">[about me]</p>
+        <p class="hero-desc">I help big brands feel more human, more memorable, and a little less expected — creating ideas that connect with people and deliver in the real world.</p>
+      </div>
+      <div>
+      </div>
+    </div>
+
+    <div class="hero-type" id="heroType">
+      <div class="hero-text-base">
+        <span class="hero-line" id="heroLine1">BIG BRANDS.<br class="mob-break"> <span style="color:var(--red)">WEIRD</span> IDEAS.</span>
+        <span class="hero-line hero-line-2" id="heroLine2">WORK THAT LANDS.</span>
+      </div>
+      <div class="hero-spotlight-glow" id="heroGlow"></div>
+      <div class="hero-text-secret" id="heroSecret">
+        <span class="hero-line hero-secret-line">NO EGO. BIG HEART.</span>
+        <span class="hero-line hero-line-2 hero-secret-line">LOVES TO LAUGH.</span>
+      </div>
+    </div>
+
+    <a href="mailto:laraghgallagher@yahoo.com" class="hero-cta-float">
+      <div class="cta-icon">↗</div>
+      <span class="cta-label">Send Message For Work</span>
+    </a>
+  </section>
+
+
+  <!-- EXPERIENTIAL WORK -->
+  <section id="work">
+    <div class="section-header reveal">
+      <div>
+        <p class="section-coord">[work]</p>
+        <h2 class="section-title">EXPERIENTIAL</h2>
+      </div>
+    </div>
+    <div class="section-wrap" style="padding-top: 2rem;">
+      <div class="work-grid">
+
+        <!-- Large cells -->
+        <div class="work-card wide reveal" data-video="3j4j1yrv4Yg"
+          data-service="Creative Direction | Ideation | 3D Design | Installation Design & Direction"
+          data-partner="Wendy's X Netflix">
+          <div class="work-thumb thumb-wednesday" style="background-image: url('images/Wednesday_Hero.jpg'); background-size: cover; background-position: center;"></div>
+          <div class="work-card-body">
+            <div class="wc-info">
+              <p class="wc-title">Wendy's × Wednesday</p>
+              <p class="wc-cat">Activation • Experiential Design</p>
+            </div>
+            <div class="wc-arrow">↗</div>
+          </div>
+        </div>
+
+        <div class="work-card wide reveal" data-video="U6yFk8oqYMI"
+          data-service="Creative Direction | Ideation | Design | Installation Design & Direction"
+          data-partner="Pernod Ricard">
+          <div class="work-thumb thumb-jameson" style="background-image: url('images/Jameson_Hero.jpg'); background-size: cover; background-position: center;"></div>
+          <div class="work-card-body">
+            <div class="wc-info">
+              <p class="wc-title">Jameson Bow Street Tour</p>
+              <p class="wc-cat">Activation • Experiential Design</p>
+            </div>
+            <div class="wc-arrow">↗</div>
+          </div>
+        </div>
+
+        <div class="work-card wide reveal" data-video="f2zL_xmWn0E"
+          data-service="Creative Direction | Ideation | 3D Design | Installation Design & Direction"
+          data-partner="Wendy's">
+          <div class="work-thumb thumb-scarethru" style="background-image: url('images/Scare-Thru_Hero.jpg'); background-size: cover; background-position: center;"></div>
+          <div class="work-card-body">
+            <div class="wc-info">
+              <p class="wc-title">Wendy's Scare-Thru</p>
+              <p class="wc-cat">Activation • Experiential Design</p>
+            </div>
+            <div class="wc-arrow">↗</div>
+          </div>
+        </div>
+
+        <div class="work-card wide reveal" data-video="hBIE2w7_VhI"
+          data-role="Creator & Director"
+          data-service="Immersive Theater Concept"
+          data-service-label="What it is"
+          data-partner="On the Hunt"
+          data-partner-label="Partner">
+          <div class="work-thumb" style="background-image: url('images/Shirley_Hero.jpg'); background-size: cover; background-position: center;"></div>
+          <div class="work-card-body">
+            <div class="wc-info">
+              <p class="wc-title">Waffle House Diaries</p>
+              <p class="wc-cat">Personal Project • Immersive Experiential Design</p>
+            </div>
+            <div class="wc-arrow">↗</div>
+          </div>
+        </div>
+
+        <div class="work-card wide reveal" data-video="bcFsI4gS_6k"
+          data-service="Concept | Creative Design & Direction IRL"
+          data-partner="Hasbro">
+          <div class="work-thumb" style="background-image: url('images/Clue_Hero.jpg'); background-size: cover; background-position: center;"></div>
+          <div class="work-card-body">
+            <div class="wc-info">
+              <p class="wc-title">Hasbro Clue Game IRL</p>
+              <p class="wc-cat">Open Brief • Immersive Experience</p>
+            </div>
+            <div class="wc-arrow">↗</div>
+          </div>
+        </div>
+
+        <!-- Small cells -->
+        <div class="work-card reveal reveal-left" data-video="AFnLxkR48mo"
+          data-service="Creative Direction | Ideation | Design | Installation Design & Direction"
+          data-partner="State Farm X NBA">
+          <div class="work-thumb" style="background-image: url('images/SF_Avtivation_Hero.jpg'); background-size: cover; background-position: center;"></div>
+          <div class="work-card-body">
+            <div class="wc-info">
+              <p class="wc-title">State Farm All-Star</p>
+              <p class="wc-cat">Activation • Experiential Design</p>
+            </div>
+            <div class="wc-arrow">↗</div>
+          </div>
+        </div>
+
+        <div class="work-card reveal" data-video="_EEOzSn_51w"
+          data-service="Creative Direction | Ideation | Design | Installation Design & Direction"
+          data-partner="Wendy's X Adult Swim">
+          <div class="work-thumb" style="background-image: url('images/SB_Krabby_Hero.jpg'); background-size: cover; background-position: center;"></div>
+          <div class="work-card-body">
+            <div class="wc-info">
+              <p class="wc-title">Wendy's × SpongeBob</p>
+              <p class="wc-cat">Activation • Experiential Design</p>
+            </div>
+            <div class="wc-arrow">↗</div>
+          </div>
+        </div>
+
+        <div class="work-card reveal reveal-right d1" data-video="OC79uyI2nNM"
+          data-service="Creative Direction | Ideation | Design | Installation Design & Direction"
+          data-partner="Wendy's">
+          <div class="work-thumb" style="background-image: url('images/Sailgate_Hero.jpg'); background-size: cover; background-position: center;"></div>
+          <div class="work-card-body">
+            <div class="wc-info">
+              <p class="wc-title">Wendy's Sailgating</p>
+              <p class="wc-cat">Activation • Experiential Design</p>
+            </div>
+            <div class="wc-arrow">↗</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- THE MORE -->
+  <section id="more">
+    <div class="section-header reveal">
+      <div>
+        <p class="section-coord">[work]</p>
+        <h2 class="section-title">THE MORE</h2>
+      </div>
+    </div>
+    <div class="section-wrap" style="padding-top: 2rem;">
+      <div class="work-grid">
+
+        <div class="work-card reveal reveal-left" data-video="SxURZJmzxZs"
+          data-service="Ideation & Creative Direction"
+          data-partner="Frito-Lay X Hasbro">
+          <div class="work-thumb" style="background-image: url('images/PotatoHead_Hero.jpg'); background-size: cover; background-position: center;"></div>
+          <div class="work-card-body">
+            <div class="wc-info">
+              <p class="wc-title">Lay's × Potato Head</p>
+              <p class="wc-cat">Commercial</p>
+            </div>
+            <div class="wc-arrow">↗</div>
+          </div>
+        </div>
+
+        <div class="work-card reveal" data-video="ZZgD7yk1UQQ"
+          data-service="Ideation | Design | Creative Direction"
+          data-partner="Frito-Lay X Anna Ferris">
+          <div class="work-thumb" style="background-image: url('images/FlavorSwap_Hero.jpg'); background-size: cover; background-position: center;"></div>
+          <div class="work-card-body">
+            <div class="wc-info">
+              <p class="wc-title">Lay's Flavor Swap Tour</p>
+              <p class="wc-cat">Web Content Series</p>
+            </div>
+            <div class="wc-arrow">↗</div>
+          </div>
+        </div>
+
+        <div class="work-card reveal reveal-right d1"
+          data-gallery="images/Ocean Spray.jpg"
+          data-service="Create packaging that would stand out on shelf."
+          data-partner="Proactive Thinking">
+          <div class="work-thumb" style="background-image: url('images/OS_Hero.jpg'); background-size: cover; background-position: center;"></div>
+          <div class="work-card-body">
+            <div class="wc-info">
+              <p class="wc-title">Ocean Spray</p>
+              <p class="wc-cat">Gaming</p>
+            </div>
+            <div class="wc-arrow">↗</div>
+          </div>
+        </div>
+
+        <div class="work-card reveal reveal-left"
+          data-video="Mbx-KFm60mw"
+          data-gallery="images/RBG_1_Hero.png, images/RBG_2_Hero.png, images/RBG_3_Hero.png, images/RBG_4_Hero.png, images/RBG_5_Hero.png, images/RBG_6_Hero.png, center:images/ROLL_HazardBrochure.jpg, center:images/ROLL_TireCard.jpg"
+          data-service="Ideation | Illustrator | Creative Direction"
+          data-partner="TMA X Goodyear">
+          <div class="work-thumb" style="background-image: url('images/RBG_Hero.jpg'); background-size: cover; background-position: center;"></div>
+          <div class="work-card-body">
+            <div class="wc-info">
+              <p class="wc-title">Roll By Goodyear</p>
+              <p class="wc-cat">Brand Identity Design</p>
+            </div>
+            <div class="wc-arrow">↗</div>
+          </div>
+        </div>
+
+        <div class="work-card reveal"
+          data-gallery="images/Mango_Hero.jpg, images/Mint_Hero.jpg, images/Strawberry_Hero.jpg, images/Cookies_Hero.jpg"
+          data-service="Ideation | Illustrator | Creative Direction"
+          data-partner="My/Mo">
+          <div class="work-thumb" style="background-image: url('images/MyMo_Hero.jpg'); background-size: cover; background-position: center;"></div>
+          <div class="work-card-body">
+            <div class="wc-info">
+              <p class="wc-title">My/Mo Ice Cream</p>
+              <p class="wc-cat">Branding</p>
+            </div>
+            <div class="wc-arrow">↗</div>
+          </div>
+        </div>
+
+        <div class="work-card reveal reveal-right d1" data-video="7vOkF3y90aQ"
+          data-service="Ideation | Storyboard | Creative Direction"
+          data-partner="TMA X Philips">
+          <div class="work-thumb" style="background-image: url('images/Philips_Hero.jpg'); background-size: cover; background-position: center;"></div>
+          <div class="work-card-body">
+            <div class="wc-info">
+              <p class="wc-title">Philips VR Experience</p>
+              <p class="wc-cat">Virtual Reality · Experiential Design</p>
+            </div>
+            <div class="wc-arrow">↗</div>
+          </div>
+        </div>
+
+        <div class="work-card reveal reveal-left">
+          <div class="work-thumb thumb-chicken" style="background-image: url('images/Chicken_Hero.png'); background-size: cover; background-position: center;"></div>
+          <div class="work-card-body">
+            <div class="wc-info">
+              <p class="wc-title">Chicken Fight</p>
+              <p class="wc-cat">Game Design</p>
+            </div>
+            <div class="wc-arrow">↗</div>
+          </div>
+        </div>
+
+        <div class="work-card reveal"
+          data-gallery="full:images/TaxesSuck_pop.jpg, center:images/FUTaxes_Layout.jpg"
+          data-partner="Turbo Tax X Natural Light">
+          <div class="work-thumb" style="background-image: url('images/Taxes_Suck.jpg'); background-size: cover; background-position: center;"></div>
+          <div class="work-card-body">
+            <div class="wc-info">
+              <p class="wc-title">Turbo Tax × Natural Light</p>
+              <p class="wc-cat">Promotional Activation</p>
+            </div>
+            <div class="wc-arrow">↗</div>
+          </div>
+        </div>
+
+        <div class="work-card reveal reveal-right d1"
+          data-gallery="images/1W1_Hero.png, images/1W2_Hero.png, images/1W3_Hero.jpg, images/1W4_Hero.png"
+          data-service="Ideation & Design"
+          data-partner="RFP Ask">
+          <div class="work-thumb" style="background-image: url('images/1WHero.png'); background-size: cover; background-position: center;"></div>
+          <div class="work-card-body">
+            <div class="wc-info">
+              <p class="wc-title">Oneworld</p>
+              <p class="wc-cat">Branding</p>
+            </div>
+            <div class="wc-arrow">↗</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-header reveal">
+      <div>
+        <p class="section-coord">[hello]</p>
+        <h2 class="section-title">ABOUT ME</h2>
+      </div>
+    </div>
+    <div class="section-wrap" style="padding-top: 2rem;">
+      <div class="about-grid">
+        <div>
+          <div class="about-flip-card">
+            <div class="about-flip-inner">
+              <div class="about-flip-front">
+                <p class="about-bio reveal">As an award-winning Executive Creative Director at The Marketing Arm, I've spent 20 years building and leading a team of 150+ creatives alongside a roster of talented freelancers.</p>
+                <p class="about-bio reveal d1">My leadership style is rooted in servant leadership — working alongside my team, recognising each person's strengths, and building an environment where every voice contributes to exceptional work.</p>
+                <p class="about-bio reveal d2">I've worked across graphic design, illustration, experiential, POS, and virtual reality — for clients including PepsiCo, Disney, Pernod Ricard, Philips and Wendy's.</p>
+              </div>
+              <div class="about-flip-back">
+                <span class="about-flip-back-line">Not here for the trophy. Here for the work.</span>
+                <span class="about-flip-back-line">I just want to make things that feel like something — with a team that lifts each other up, laughs hard, and goes home proud of what they built together.</span>
+              </div>
+            </div>
+          </div>
+          <p class="about-bio reveal d3" style="margin-top: 1.5rem;">My ethos: <strong>do great work, then make it even better.</strong></p>
+
+          <div class="quotes-grid reveal d4">
+            <blockquote class="quote-item">
+              <img class="quote-avatar" src="images/Trina_Hero.png" alt="Trina Roffino">
+              <div class="quote-body">
+                <p class="quote-text">"She doesn't follow creative trends, she creates the moments everyone else wishes they'd thought of. Visionary, fearless, and one of the most inspiring leaders I've worked alongside."</p>
+                <cite class="quote-cite">— Trina Roffino, CEO of TMA | Founder, Project Unbroken</cite>
+              </div>
+            </blockquote>
+            <blockquote class="quote-item">
+              <img class="quote-avatar" src="images/Chris_Hero.png" alt="Chris Bristol">
+              <div class="quote-body">
+                <p class="quote-text">"Laragh is one of the most talented creatives I've had the pleasure of working alongside. Specifically brilliant at experiential creative development and execution — the kind of person you want in your corner on anything that matters."</p>
+                <cite class="quote-cite">— Chris Bristol, Chief Growth Officer | Zimmerman Advertising</cite>
+              </div>
+            </blockquote>
+            <blockquote class="quote-item">
+              <img class="quote-avatar" src="images/Frank_Hero.png" alt="Frank Vamos">
+              <div class="quote-body">
+                <p class="quote-text">"I trusted Laragh with everything creative, and she never let me down. She knows the Wendy's brand deeply, champions it fiercely, and always finds ways to take it to the next level — delivering work that makes you proud to put your name on it."</p>
+                <cite class="quote-cite">— Frank Vamos, VP, Global Strategic Communications & Creative Storytelling | The Wendy's Company</cite>
+              </div>
+            </blockquote>
+          </div>
+        </div>
+
+        <div>
+          <p class="awards-title reveal">[If awards matter to you]</p>
+          <ul class="award-list">
+            <li class="award-item reveal d1">Cannes Lion</li>
+            <li class="award-item reveal d1">Clio Award</li>
+            <li class="award-item reveal d2">Addys</li>
+            <li class="award-item reveal d3">Pro Awards</li>
+            <li class="award-item reveal d4">Reggies</li>
+            <li class="award-item reveal d5">Effies</li>
+            <li class="award-item reveal d1">Cannes Lions Shortlist</li>
+            <li class="award-item reveal d2">One Show Shortlist</li>
+            <li class="award-item reveal d3">POPAI</li>
+          </ul>
+
+          <div class="skills-row reveal">
+            <span class="skill-tag">Brand Identity</span>
+            <span class="skill-tag">Art Direction</span>
+            <span class="skill-tag">Experiential</span>
+            <span class="skill-tag">Virtual Reality</span>
+            <span class="skill-tag">Digital</span>
+            <span class="skill-tag">Social</span>
+            <span class="skill-tag">POS & Retail</span>
+            <span class="skill-tag">Illustration</span>
+            <span class="skill-tag">Team Leadership</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-wrap">
+      <p class="section-coord reveal">[contact]</p>
+      <div class="contact-big">
+        <span class="contact-line" id="cLine1">LET'S BUILD</span>
+        <span class="contact-line contact-line-2" id="cLine2">SOMETHING.</span>
+      </div>
+
+      <div class="contact-links">
+        <a href="mailto:laraghgallagher@yahoo.com" class="contact-link-row reveal">
+          <span class="cl-label">Email</span>
+          <span class="cl-value">laraghgallagher@yahoo.com</span>
+        </a>
+        <a href="tel:8179915975" class="contact-link-row reveal d1">
+          <span class="cl-label">Phone</span>
+          <span class="cl-value">817.991.5975</span>
+        </a>
+        <div class="contact-link-row reveal d2" style="cursor:default;">
+          <span class="cl-label">Base</span>
+          <span class="cl-value">Frisco, TX</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECT MODAL -->
+  <div id="video-modal">
+    <div class="modal-inner">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">PROJECT TITLE</h2>
+      </div>
+      <div class="modal-meta">
+        <div class="modal-meta-item">
+          <span class="modal-meta-label">Role</span>
+          <span class="modal-meta-value" id="modalRole">Executive Creative Director</span>
+        </div>
+        <div class="modal-meta-item modal-meta-service">
+          <span class="modal-meta-label" id="modalServiceLabel">Responsibilities</span>
+          <span class="modal-meta-value" id="modalService">–</span>
+        </div>
+        <div class="modal-meta-item">
+          <span class="modal-meta-label" id="modalPartnerLabel">Partner</span>
+          <span class="modal-meta-value" id="modalPartner">–</span>
+        </div>
+      </div>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="modal-media" id="modalMedia">
+        <iframe id="modalIframe" src="" allowfullscreen allow="autoplay"></iframe>
+      </div>
+      <div class="modal-gallery" id="modalGallery"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>©2026 Laragh Gallagher</p>
+  </footer>
+
+  <script>
+    /* ── PRELOADER ── */
+    const preloader = document.getElementById('preloader');
+    setTimeout(() => {
+      preloader.classList.add('done');
+      setTimeout(() => {
+        document.getElementById('heroLine1').classList.add('revealed');
+        document.getElementById('heroLine2').classList.add('revealed');
+      }, 500);
+    }, 2400);
+
+    /* ── NAV DROPDOWN ── */
+    const menuBtn     = document.getElementById('menuBtn');
+    const navDropdown = document.getElementById('navDropdown');
+
+    menuBtn.addEventListener('click', () => navDropdown.classList.toggle('open'));
+
+    document.querySelectorAll('[data-menu-link]').forEach(link => {
+      link.addEventListener('click', () => navDropdown.classList.remove('open'));
+    });
+
+    document.addEventListener('click', e => {
+      if (!menuBtn.contains(e.target) && !navDropdown.contains(e.target)) {
+        navDropdown.classList.remove('open');
+      }
+    });
+
+    /* ── CURSOR ── */
+    const cursor = document.getElementById('cursor');
+    const ring   = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top  = my + 'px';
+      const el = document.elementFromPoint(mx, my);
+      const hover = el && (el.closest('a') || el.closest('button'));
+      cursor.style.width  = hover ? '5px' : '8px';
+      cursor.style.height = hover ? '5px' : '8px';
+      ring.style.width    = hover ? '46px' : '32px';
+      ring.style.height   = hover ? '46px' : '32px';
+      ring.style.borderColor = hover ? 'rgba(200,169,110,0.55)' : 'rgba(237,229,216,0.28)';
+    });
+
+    (function animRing() {
+      rx += (mx - rx) * 0.13;
+      ry += (my - ry) * 0.13;
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+      requestAnimationFrame(animRing);
+    })();
+
+    /* ── NAV ── */
+    const nav = document.getElementById('nav');
+    const ctaFloat = document.querySelector('.hero-cta-float');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+      ctaFloat.classList.toggle('cta-visible', window.scrollY > document.getElementById('hero').offsetHeight * 0.6);
+    }, { passive: true });
+
+    /* ── SPOTLIGHT REVEAL ── */
+    const heroType   = document.getElementById('heroType');
+    const heroSecret = document.getElementById('heroSecret');
+    const heroGlow   = document.getElementById('heroGlow');
+    const heroBase   = heroType.querySelector('.hero-text-base');
+
+    let lx = 0, ly = 0, smx = 0, smy = 0;
+    let currentR = 0, targetR = 0;
+
+    heroType.addEventListener('mousemove', e => {
+      const rect = heroType.getBoundingClientRect();
+      const nx = e.clientX - rect.left;
+      const ny = e.clientY - rect.top;
+      const speed = Math.sqrt((nx - lx) ** 2 + (ny - ly) ** 2);
+      targetR = Math.min(180 + speed * 3.5, 320);
+      smx = nx; smy = ny;
+      lx = nx; ly = ny;
+    });
+
+    heroType.addEventListener('mouseleave', () => { targetR = 0; });
+
+    (function animSpot() {
+      currentR += (targetR - currentR) * 0.12;
+      const r = currentR.toFixed(1);
+      const x = smx.toFixed(1);
+      const y = smy.toFixed(1);
+
+      heroSecret.style.clipPath = `circle(${r}px at ${x}px ${y}px)`;
+      heroGlow.style.background = `radial-gradient(circle ${r}px at ${x}px ${y}px, rgba(255,193,0,0.1) 0%, transparent 100%)`;
+
+      const mask = `radial-gradient(circle ${r}px at ${x}px ${y}px, transparent 96%, black 104%)`;
+      heroBase.style.webkitMaskImage = mask;
+      heroBase.style.maskImage = mask;
+
+      requestAnimationFrame(animSpot);
+    })();
+
+    /* ── HERO PARALLAX ── */
+    const heroBg   = document.querySelector('.hero-bg');
+    const heroSect = document.getElementById('hero');
+    let bgX = 50, bgY = 30, tgX = 50, tgY = 30;
+
+    heroSect.addEventListener('mousemove', e => {
+      const rect = heroSect.getBoundingClientRect();
+      const dx = (e.clientX / rect.width  - 0.5) * -6;
+      const dy = (e.clientY / rect.height - 0.5) * -4;
+      tgX = 50 + dx;
+      tgY = 30 + dy;
+    });
+
+    heroSect.addEventListener('mouseleave', () => {
+      tgX = 50; tgY = 30;
+    });
+
+    (function animBg() {
+      bgX += (tgX - bgX) * 0.06;
+      bgY += (tgY - bgY) * 0.06;
+      heroBg.style.backgroundPosition = `${bgX.toFixed(2)}% ${bgY.toFixed(2)}%`;
+      requestAnimationFrame(animBg);
+    })();
+
+    /* ── SCROLL REVEAL ── */
+    const revEls = document.querySelectorAll('.reveal');
+    const revObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          revObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+    revEls.forEach(el => revObs.observe(el));
+
+    /* ── WORK CARD TILT ── */
+    document.querySelectorAll('.work-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        const dx = (e.clientX - (r.left + r.width  / 2)) / (r.width  / 2);
+        const dy = (e.clientY - (r.top  + r.height / 2)) / (r.height / 2);
+        card.style.transition = 'transform 0.08s ease, background 0.3s';
+        card.style.transform  = `perspective(900px) rotateY(${dx * 5}deg) rotateX(${-dy * 2.5}deg) scale(1.012)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transition = 'transform 0.55s cubic-bezier(0.23, 1, 0.32, 1), background 0.3s';
+        card.style.transform  = 'perspective(900px) rotateY(0deg) rotateX(0deg) scale(1)';
+      });
+    });
+
+    /* ── CONTACT TYPE REVEAL ── */
+    const ctObs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        document.getElementById('cLine1').classList.add('revealed');
+        document.getElementById('cLine2').classList.add('revealed');
+        ctObs.disconnect();
+      }
+    }, { threshold: 0.25 });
+    ctObs.observe(document.getElementById('contact'));
+
+    /* ── PROJECT MODAL ── */
+    const modal        = document.getElementById('video-modal');
+    const modalIframe  = document.getElementById('modalIframe');
+    const modalMedia   = document.getElementById('modalMedia');
+    const modalClose   = document.getElementById('modalClose');
+    const modalGallery = document.getElementById('modalGallery');
+
+    function openModal(card) {
+      const videoId  = card.dataset.video || '';
+      const titleEl  = card.querySelector('.wc-title');
+      const catEl    = card.querySelector('.wc-cat');
+
+      document.getElementById('modalTitle').textContent       = titleEl ? titleEl.textContent : '—';
+      document.getElementById('modalRole').textContent        = card.dataset.role          || 'Executive Creative Director';
+      document.getElementById('modalServiceLabel').textContent = card.dataset.serviceLabel || 'Responsibilities';
+      document.getElementById('modalService').textContent     = card.dataset.service       || (catEl ? catEl.textContent : '—');
+      document.getElementById('modalPartnerLabel').textContent = card.dataset.partnerLabel || 'Partner';
+      document.getElementById('modalPartner').textContent     = card.dataset.partner       || '–';
+      document.getElementById('modalDesc').textContent        = card.dataset.desc          || '';
+
+      // Gallery
+      modalGallery.innerHTML = '';
+      if (card.dataset.gallery) {
+        const imgs = card.dataset.gallery.split(',').map(s => s.trim()).filter(Boolean);
+        imgs.forEach((entry, i) => {
+          const centered = entry.startsWith('center:');
+          const full     = entry.startsWith('full:');
+          const src = entry.replace(/^(center:|full:)/, '');
+          const img = document.createElement('img');
+          img.src = src;
+          if (centered) {
+            img.className = 'modal-gallery-img centered';
+          } else if (full) {
+            img.className = 'modal-gallery-img full';
+          } else {
+            const regularCount = imgs.filter(e => !e.startsWith('center:') && !e.startsWith('full:')).length;
+            img.className = 'modal-gallery-img' + (regularCount % 2 !== 0 && i === imgs.length - 1 ? ' full' : '');
+          }
+          img.alt = '';
+          modalGallery.appendChild(img);
+        });
+      }
+
+      if (videoId) {
+        modalIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+        modalMedia.style.display = 'block';
+      } else {
+        modalIframe.src = '';
+        modalMedia.style.display = 'none';
+      }
+
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      modalIframe.src = '';
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.work-card').forEach(card => {
+      card.addEventListener('click', () => openModal(card));
+      card.style.cursor = 'none';
+    });
+
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    /* ── FORM ── */
+    function handleSubmit(e) {
+      e.preventDefault();
+      const s = document.getElementById('form-status');
+      s.style.display = 'block';
+      s.textContent = 'Message sent — I\'ll be in touch soon.';
+      e.target.reset();
+    }
+  </script>
+
+</body>
+</html>
